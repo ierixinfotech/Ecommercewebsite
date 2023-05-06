@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Shopping Cart</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- fontawesome cdn -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+      .scroller{
+        width: 100%;
+        height: 58vh;
+        margin-top: 10%;
+        position: relative;
+      }
+
+      #btn{
+        position: fixed;
+        bottom: 130px;
+      }
+
+      #total-price{
+        font-size: large;
+        color: white;
+      }
+
+      @media screen and (max-width: 1281px) {
+        .scroller{
+        width: 100%;
+        height: 60vh;
+        margin-top: 8%;
+        position: relative;
+        overflow: scroll;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+      #btn{
+        position: fixed;
+        bottom: 50px;
+        left: 85px;
+        font-weight: 800;
+        
+      }
+      }
+      @media screen and (max-width: 426px) {
+        .scroller{
+        width: 100%;
+        height: 60vh;
+        margin-top: 25%;
+        position: relative;
+        overflow: scroll;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+      #btn{
+        position: fixed;
+        bottom: 50px;
+        left: 85px;
+        font-weight: 800;
+        
+      }
+      }
+      @media screen and (max-width: 321px) {
+        .scroller{
+        width: 100%;
+        height: 69vh;
+        margin-top: 15%;
+      }
+      }
+      
+    </style>
+</head>
+
+<body>
+
+  <nav class = "navbar navbar-expand-lg navbar-light bg-white py-2 fixed-top" id="nav">
+    <div class = "container">
+        <a class = "navbar-brand d-flex justify-content-between align-items-center order-lg-0" href = "index.html">
+            <img src = "images/shopping-bag-icon.png" alt = "site icon">
+            <span class = "text-uppercase fw-lighter ms-2">IERIX</span>
+        </a>
+
+       
+
+        <button class = "navbar-toggler border-0" type = "button" data-bs-toggle = "collapse" data-bs-target = "#navMenu">
+            <span class = "navbar-toggler-icon"></span>
+        </button>
+
+        <div class = "collapse navbar-collapse order-lg-1" id = "navMenu">
+            <ul class = "navbar-nav mx-auto text-center">
+                <li class = "nav-item px-2 py-2">
+                    <a class = "nav-link text-uppercase text-dark" href = "./index.html">home</a>
+                </li>
+              
+                <li class = "nav-item px-2 py-2">
+                    <a class = "nav-link text-uppercase text-dark" href = "./blog.html">blogs</a>
+                </li>
+                <li class = "nav-item px-2 py-2">
+                    <a class = "nav-link text-uppercase text-dark" href = "./about.html">about us</a>
+                </li>
+              
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="container">
+      <div class="scroller" id="data">
+        <div id="btn">
+      </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var data = localStorage.getItem("cart");
+        var json = JSON.parse(data);
+        console.log(json);
+
+        // array 
+        if (!json || json.length === 0) {
+
+          $("#data").append(`
+          <h1 class="row justify-content-center">not found data</h1>
+          `);
+
+          $("#data").removeClass("scroller");
+          $("#nav").removeClass("fixed-top");
+        }else{
+          $("#btn").append(`
+          <button class="btn bg-primary mt-2 fs-3" id="total-price"></button>
+          `);
+        }
+
+        if (json.length > 2) {
+        $(".scroller").css("overflow", "scroll");
+        $(".scroller").css("scroll-behavior", "smooth");
+        $(".scroller").css("overflow-x", "hidden");
+        }
+
+        json?.forEach((json) => {
+            $("#data").append(
+                `
+        <div class="row justify-content-center mt-3 align-items-center border p-2">
+        <div class="col-3 col-md-2">
+          <img src="${json.url}" alt="Product image" class="w-100">
+        </div>
+        <div class="col-9 col-md-3">
+          <h4 class="mb-1">${json.name}</h4>
+          <p class="text-muted small">Item #123456789</p>
+        </div>
+        <div class="col-6 col-md-2 mt-2 mt-md-0">
+          <div class="input-group">
+            <button class="btn btn-outline-secondary" type="button" onclick="down(this)">-</button>
+            <input type="number" class="form-control text-center" id="edu" value="1" min="1" max="50" disabled>
+            <button class="btn btn-outline-secondary" type="button" onclick="up(this)">+</button>
+          </div>
+        </div>
+        <div class="col-6 col-md-2 mt-2 mt-md-0">
+          <h6 class="mb-1">Price</h6>
+          <p class="mb-0" id="resultP">${json.price}Rs</p>
+        </div>
+        <div class="col-6 col-md-2 mt-2 mt-md-0">
+          <h6 class="mb-1">Total</h6>
+          <p class="mb-0" id="result">${json.price}Rs</p>
+        </div>
+        <div class="col-6 col-md-1 mt-2 mt-md-0">
+          <button type="button" class="btn btn-danger btn-sm" onclick="remove(event,${json.id})"><i class="fas fa-trash-alt"></i></button>
+        </div>
+      </div>
+                        
+                        `
+            );
+        });
+
+        function up(element) {
+  const inputEl = element.parentElement.querySelector('input');
+  const priceEl = element.closest('.row').querySelector('#resultP');
+  const resultEl = element.closest('.row').querySelector('#result');
+  
+  inputEl.value = parseInt(inputEl.value) + 1;
+  resultEl.innerText = `${parseFloat(priceEl.innerText) * parseInt(inputEl.value)}Rs`;
+  subTotal(parseFloat(priceEl.innerText) * parseInt(inputEl.value))
+}
+
+function down(element) {
+  const inputEl = element.parentElement.querySelector('input');
+  if (inputEl.value > 1) {
+    const priceEl = element.closest('.row').querySelector('#resultP');
+    const resultEl = element.closest('.row').querySelector('#result');
+    
+    inputEl.value = parseInt(inputEl.value) - 1;
+    resultEl.innerText = `${parseFloat(priceEl.innerText) * parseInt(inputEl.value)}Rs`;
+    subTotal(parseFloat(priceEl.innerText) * parseInt(inputEl.value))
+  }
+}
+
+
+
+function remove(e,id){
+    const thisClick = e.currentTarget;
+    thisClick.innerText = "deleted";
+    var v = localStorage.getItem("cart");
+    var j = JSON.parse(v);
+    const index = j.map((object) => object.id).indexOf(id);
+    console.log(index);
+
+    if (index > -1) {
+      var ls_data = JSON.parse(localStorage.getItem("cart"));
+      const data = ls_data.splice(index, 1);
+      console.log(data);
+      localStorage.setItem("cart", JSON.stringify(ls_data));
+    }
+    thisClick.closest("div").remove();
+    window.location.reload();
+    
+}
+
+function calculateTotal() {
+        let totalPrice = 0;
+        const resultElements = document.querySelectorAll("#result");
+        resultElements.forEach((resultElement) => {
+          const priceString = resultElement.textContent;
+          const price = parseFloat(priceString.replace("Rs", ""));
+          totalPrice += price;
+        });
+        console.log(`Total price: ${totalPrice} Rs`);
+        return totalPrice;
+      }
+
+      function subTotal(totalPrice) {
+        const totalPriceCell = document.getElementById("total-price");
+        totalPriceCell.textContent = `Pay: ${calculateTotal().toFixed(2)} Rs`;
+        localStorage.setItem('paise',calculateTotal()*100)
+      }
+
+      let totalPrice = 0;
+      json.forEach((item) => {
+        totalPrice += item.price;
+      });
+
+      const totalPriceCell = document.getElementById("total-price");
+      totalPriceCell.textContent = `Pay: ${totalPrice.toFixed(2)} Rs`;
+      localStorage.setItem('paise',calculateTotal()*100)
+
+      setInterval(() => {
+        const paise = localStorage.getItem('paise');
+        var options = {
+        key: "rzp_test_A6ZhWKW5huVjHG",
+        amount: paise,
+        name: "IERIX",
+        description: "Test Transaction",
+        image: "./images/shopping-bag-icon.png",
+        handler: function (response) {
+          alert(response.razorpay_payment_id);
+        },
+        prefill: {
+          name: "John Doe",
+          email: "johndoe@example.com",
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#F37254",
+        },
+      };
+
+      var rzp1 = new Razorpay(options);
+
+      document.getElementById("total-price").onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+      };
+      }, 1000);
+    </script>
+
+
+</body>
+
+</html>
